@@ -11,7 +11,7 @@ Languages: [English](../../README.md) | 日本語
 
 ### 推奨：skills CLI 経由
 ```bash
-npx skills add Harness-Insight
+npx skills add jerrywdlee/Harness-Insight
 ```
 
 ### または直接インストーラ実行

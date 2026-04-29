@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * `npx skills add Harness-Insight` 互換のインストーラ。
+ * `npx skills add jerrywdlee/Harness-Insight` 互換のインストーラ。
  *
  * 動作:
  *  - skill.json の files[] を、対象プロジェクトの <destination>（既定 .skills/harness-insight/）にコピーする。
@@ -10,7 +10,7 @@
  * 使い方:
  *   npx harness-insight                 # 現在の cwd にインストール
  *   npx harness-insight --dest <dir>    # 任意ディレクトリにインストール
- *   npx skills add Harness-Insight      # skills CLI 経由
+ *   npx skills add jerrywdlee/Harness-Insight      # skills CLI 経由
  */
 const fs = require('fs');
 const path = require('path');

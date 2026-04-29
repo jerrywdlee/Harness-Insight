@@ -11,7 +11,7 @@ Supported harnesses: GitHub Copilot Chat / Cursor / **Claude Code** / **OpenAI C
 
 ### Recommended: via the skills CLI
 ```bash
-npx skills add Harness-Insight
+npx skills add jerrywdlee/Harness-Insight
 ```
 
 ### Or run the installer directly

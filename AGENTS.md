@@ -5,7 +5,7 @@
 
 ## このプロジェクトの正体
 - 種別: Universal AI Self-Reflection & Improvement SKILL のソースリポジトリ
-- 配布形態: `npx skills add Harness-Insight` / `npx harness-insight`
+- 配布形態: `npx skills add jerrywdlee/Harness-Insight` / `npx harness-insight`
 - 詳細仕様: [SKILL.md](SKILL.md)
 
 ## ここで作業する AI Agent (Copilot / Claude Code / Codex / Cursor 等) への指示

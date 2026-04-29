@@ -17,12 +17,12 @@ subcommands:
   - "/harness-insight extract"  # Step 1+2 のみ実行（複数セッション PJ 用）
   - "/harness-insight list"     # 検知セッション一覧のみ表示
 install:
-  - "npx skills add Harness-Insight"
+  - "npx skills add jerrywdlee/Harness-Insight"
 ---
 
 # Harness-Insight SKILL：AI 自己評価 ＆ 自己改善
 
-> このリポジトリ自身が SKILL パッケージです。`npx skills add Harness-Insight` で他プロジェクトにインストールできます。
+> このリポジトリ自身が SKILL パッケージです。`npx skills add jerrywdlee/Harness-Insight` で他プロジェクトにインストールできます。
 
 ## 0. 前提
 - 本 SKILL は **対象プロジェクトのルートで実行** されることを前提とする。
@@ -250,7 +250,7 @@ Harness-Insight/                   ← この repo 自身が SKILL package
 ├── package.json                   ← npm パッケージ定義 (npx skills add 用)
 ├── skill.json                     ← skills CLI 用マニフェスト
 ├── bin/
-│   └── install.js                 ← `npx skills add Harness-Insight` 実装
+│   └── install.js                 ← `npx skills add jerrywdlee/Harness-Insight` 実装
 ├── scripts/
 │   ├── extract.js                 ← Step2 抽出 (Node)
 │   ├── extract.py                 ← Step2 抽出 (Python)
