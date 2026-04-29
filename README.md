@@ -37,8 +37,7 @@ After installation, type **`/harness-insight`** (preferred) or `/reflect` to you
 | Trigger | What it does |
 |---|---|
 | `/harness-insight` (preferred) / `/reflect` | Run the full Step 1–5 loop |
-| **`/extract-logs`** | **Extract only** (Step 1+2). Standalone trigger for projects with multiple sessions |
-| `/harness-insight extract` | Alias of `/extract-logs` (subcommand form) |
+| `/harness-insight extract` | **Extract only** (Step 1+2). Useful for projects with multiple sessions |
 | `/harness-insight list` | List detected sessions only (no extraction) |
 
 ### Manual commands

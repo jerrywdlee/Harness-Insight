@@ -50,7 +50,7 @@ function announceInAgentsMd() {
   const block = [
     marker,
     '## Harness-Insight SKILL',
-    '- Trigger: `/reflect`',
+    '- Trigger: `/harness-insight` (or `/reflect`)',
     `- Spec: see [${path.relative(TARGET_PROJECT, DEST).replace(/\\/g, '/')}/SKILL.md](${path.relative(TARGET_PROJECT, DEST).replace(/\\/g, '/')}/SKILL.md)`,
     '<!-- /harness-insight -->',
     '',

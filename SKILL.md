@@ -15,6 +15,7 @@ trigger:
   - セッション終了時の自動起動（任意）
 subcommands:
   - "/harness-insight extract"  # Step 1+2 のみ実行（複数セッション PJ 用）
+  - "/harness-insight list"     # 検知セッション一覧のみ表示
 install:
   - "npx skills add Harness-Insight"
 ---
@@ -278,7 +279,7 @@ Harness-Insight/                   ← この repo 自身が SKILL package
 
 ## 7. AI 実行手順（Copilot 向けプロンプト要約）
 
-ユーザーが `/reflect` を発した場合、Copilot は以下を順守：
+ユーザーが `/harness-insight`（またはエイリアス `/reflect` / `/self-review`）を発した場合、Copilot は以下を順守：
 
 1. `SKILL.md` を再読込。
 2. **必ず別コンテキスト** で Step 3-4 を実行（メイン汚染防止）。

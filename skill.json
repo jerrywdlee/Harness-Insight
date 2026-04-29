@@ -2,7 +2,7 @@
   "$schema": "https://skills.dev/schema/skill.json",
   "name": "Harness-Insight",
   "id": "harness-insight",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "summary": "Vibe coding セッションの自己評価＝＞自己改善ループ。多種ハーネス対応の汎用 SKILL。",
   "entry": "SKILL.md",
   "triggers": ["/harness-insight", "/reflect", "/self-review"],

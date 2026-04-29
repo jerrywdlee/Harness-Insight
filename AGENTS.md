@@ -30,9 +30,9 @@
 - デフォルトは **`project`**。`global` を勝手に既定にしない。
 - 反映時は `<!-- harness-insight: <date> scope=<...> -->` マーカーで囲む。
 
-### 4. このリポジトリで `/harness-insight` (`/reflect`) または `/extract-logs` を実行されたとき
-- `/harness-insight` / `/reflect`: [SKILL.md](SKILL.md) の **Step 1〜5 を全実行**。
-- `/extract-logs`: **Step 1+2 のみ実行**して終了する（解析・反映を行わない）。複数セッションを段階的に取り込みたい場合に使う。
+### 4. このリポジトリで `/harness-insight` (`/reflect`) を実行されたとき
+- [SKILL.md](SKILL.md) の **Step 1、5 を全実行**する。
+- 抽出のみ適用したい場合は `/harness-insight extract` サブコマンドを使う（独立トリガーは追加しない — §11 Lesson 2 参照）。
 1. このリポジトリ自身のセッションログに対して [SKILL.md](SKILL.md) の 5 ステップを実行する。
 2. 抽出には **本リポジトリ直下の** [scripts/extract.js](scripts/extract.js) または [scripts/extract.py](scripts/extract.py) を使う（`.skills/harness-insight/...` ではない）。
 3. 反映先 `project` の場合の優先順は本ファイル (`./AGENTS.md`) → `./.github/copilot-instructions.md` → `./.cursor/rules/harness-insight.md`。
