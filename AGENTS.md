@@ -60,31 +60,25 @@ npm run apply -- --scope project
 # Harness-Insight Proposed Rules
 generated_at: 2026-04-29
 session: copilot/728d494b-dd8d-4d3c-ad38-5bd73d2235d5
-mode: llm-fallback (telemetry-only debug-logs のため定量パーサー結果を使用せず、AI が直接対話履歴から推計)
+mode: llm-fallback (copilot adapter が telemetry 主体のため AI が対話履歴から直接推計)
 
 ---
 
 ## Proposed Rule 1
-- **Trigger**: ユーザー要望が「設計書 v2 をベースに作って」のように **既存資産を活用しろ** と明示しているのに、AI が空ファイルから組み立てようとした事例（v2 を読まずに着手しかけた）。
-- **Rule**: ユーザーが既存ドキュメント名を指す場合、最初の 1 ターンで対象を **必ず read_file** してから設計に着手する。読まずに進めない。
+- **Trigger**: 「採点の詳細が出されていない」とユーザー報告。実装側で `breakdown` を出していなかった（SKILL.md / templates の出力仕様にも未記載）。
+- **Rule**: SKILL/レポート系機能を新設する際は、**出力サンプル（人間可読 + JSON 構造）を SKILL.md / templates/ の両方に先に固定**してから実装着手する。
 - **Apply to**: AGENTS.md
-- **Evidence**: 初回 /reflect 依頼時、`設計書v2.md` 添付前に AI 側で skill 構造を提案しかけた挙動。
+- **Evidence**: 別 PC の Antigravity 実機で採点表が空欄のまま出力された。
 
 ## Proposed Rule 2
-- **Trigger**: ユーザーが「JS 不可なら Python 版」「両方不可ならエージェント自力」のように **段階的フォールバック** を明示する傾向あり。
-- **Rule**: 多言語対応ロジックを実装する際は **必ず 2 言語以上を対で実装** し、両方失敗時の AI 自力フォールバック手順を `templates/` に明文化する。1 言語のみで完了させない。
+- **Trigger**: `/extract-logs` 独立トリガーを追加直後、ユーザーが「サブコマンド機能を知らなかった、不要」と全変更を undo。
+- **Rule**: 既存 SKILL 仕様に **新トリガー / 新サブコマンド** を追加する変更要望が来たら、まず「既存の `/<trigger> <sub>` 形式で代用可能ではないか？」を **1 ターン確認**してから着手する。
 - **Apply to**: AGENTS.md
-- **Evidence**: 2 ターン目で「Python 版も併記」、3 ターン目で「`/reflect` 実行」と段階要求が連続。
+- **Evidence**: 5 ファイル横断編集 → 数ターン後に全 undo、というロスが発生。
 
-## Proposed Rule 3
-- **Trigger**: ユーザーは追加要望時に **「対応ハーネスに claude code と codex も入れて」** のように、既存リスト型仕様への増分を頻繁に指示する。
-- **Rule**: harness リスト・スコープ選択肢など **列挙系仕様** を変更したら、SKILL.md / README / skill.json / extract.{js,py} / adapters の **5 箇所** を必ず同時更新する（チェックリスト化）。
-- **Apply to**: AGENTS.md
-- **Evidence**: claude / codex 追加時に 4 箇所の同時更新が必要だった経緯。
-
-## Proposed Rule 4 (SKILL 自体への改善ヒント — 開発元として必須)
-- **Trigger**: Copilot Chat の `debug-logs/*/main.jsonl` は telemetry イベントしか含まず、ユーザー発話・AI 応答が取れないため定量解析が機能しない。
-- **Rule (SKILL コード側で対応)**: `scripts/adapters/copilot.js` を **Chat Sessions の保存先**（`%APPDATA%/Code/User/workspaceStorage/<ws>/chatSessions/*.json` や `%APPDATA%/Code/User/History/` 配下）にも対応させる。telemetry のみのファイルは **無視**し、`type=request|response` を含むセッション JSON を優先採用する。
-- **Apply to**: SKILL 改善 issue / scripts/adapters/copilot.{js,py}
-- **Evidence**: 本セッションで extract が 1 イベント (session_start telemetry) のみ取得。
+## Proposed Rule 3 (SKILL 改善ヒント — 開発元として必須)
+- **Trigger**: copilot adapter が `debug-logs/*/main.jsonl` の telemetry を 1824 件取得したが、`prompts/edits/interrupts` がすべて 0。前回 `/reflect` でも同じ問題を指摘済み（**未対応のまま残存**）。
+- **Rule (SKILL コード側で対応)**: `scripts/adapters/copilot.{js,py}` を **Chat Sessions / Transcripts の保存先**（`%APPDATA%/Code/User/workspaceStorage/<ws>/GitHub.copilot-chat/transcripts/*.jsonl` および `chatSessions/*.json`）にも対応させる。`type=request|response` を含むファイルを優先採用し、telemetry のみのファイルは無視する。
+- **Apply to**: SKILL コード側 issue / `scripts/adapters/copilot.{js,py}`
+- **Evidence**: 2 セッション連続で定量パーサーが 0 件しか拾えていない。
 <!-- /harness-insight -->
