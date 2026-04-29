@@ -9,9 +9,12 @@ description: |
   機会損失検知, 強制停止(interrupt)分析。
   DO NOT USE FOR: 通常のコード生成タスク、単発のリファクタ依頼。
 trigger:
-  - "/reflect"
+  - "/harness-insight"          # 推奨（優先）
+  - "/reflect"                  # 後方互換エイリアス
   - "/self-review"
   - セッション終了時の自動起動（任意）
+subcommands:
+  - "/harness-insight extract"  # Step 1+2 のみ実行（複数セッション PJ 用）
 install:
   - "npx skills add Harness-Insight"
 ---
@@ -25,7 +28,7 @@ install:
 - 一時成果物は `.harness_insights/` に保存し、必ず `.gitignore` に登録する。
 - 分析は **必ず別コンテキスト (`context: fork`)** で行い、メインセッションのトークンを汚染しない。
 
-## 1. 実行フロー（5 ステップ）
+## 1. 実行フローさ（5 ステップ）
 
 ```
 [Step 1] DETECT   → ハーネス種別を判定
@@ -34,6 +37,14 @@ install:
 [Step 4] REPORT   → 二元化レポート（Human / System）
 [Step 5] APPLY    → 反映スコープを 3 値選択（none / project / global）
 ```
+
+### 1.1 サブコマンド
+
+| トリガー | 動作 | 用途 |
+|---|---|---|
+| `/harness-insight` (推奨) / `/reflect` | Step 1 〜 5 を全実行 | 通常の振り返り |
+| `/harness-insight extract` | **Step 1 + 2 のみ**（抽出だけ） | 複数セッションを持つ PJ で、それぞれのセッションを個別に保存・貄めるようなケース |
+| `/harness-insight list` | 検知されたセッション一覧を表示するのみ | 抽出対象セッションを選ぶ前の下調べ |
 
 ---
 
@@ -78,10 +89,32 @@ install:
 | 2 | `python --version` または `python3 --version` が成功 | `python scripts/extract.py` |
 | 3 | 上記いずれも不可 / クラッシュ | 実行中の AI Agent が [templates/manual_extract_prompt.md](templates/manual_extract_prompt.md) に従い **自力で** ログを取得・正規化する |
 
-### 2.3 .gitignore 自動追記
+### 2.3 オプション（複数セッション PJ 用）
+
+| オプション | 効果 |
+|---|---|
+| `--list` | 検知したセッションパスを一覧表示して終了（抽出しない） |
+| `--session <substring>` | 検知したセッションのうち、パスに該当部分文字列を含むものだけ抽出 |
+| `--out <path>` | 出力先ファイルを変更（例: `.harness_insights/sessionA.jsonl`） |
+| `--append` | `--out` と併用して追記（複数セッションを貄めるケース） |
+
+実行例：
+```bash
+# 1) セッション一覧確認
+node scripts/extract.js --list
+
+# 2) 特定セッションだけを別ファイルへ
+node scripts/extract.js --session 728d494b --out .harness_insights/728d494b.jsonl
+
+# 3) 複数セッションを単一出力に貄める
+node scripts/extract.js --session 2026-04-29 --out .harness_insights/today.jsonl
+node scripts/extract.js --session 2026-04-30 --out .harness_insights/today.jsonl --append
+```
+
+### 2.4 .gitignore 自動追記
 JS / Python の extractor は `/.harness_insights/` 行が無ければ自動追記する。Agent 自力モードでも必ず同等の処理を行う。
 
-### 2.4 アダプタ実装ポリシー
+### 2.5 アダプタ実装ポリシー
 - 各 Harness の生ログ → 共通スキーマへの変換は `scripts/adapters/<harness>.{js,py}` に分離。
 - すべて **読み取り専用**（生ログを書き換えない）。
 - JS と Python で同じ harness 名 → 同じ出力になることを保証。

@@ -142,10 +142,25 @@ function detectHarness() {
 }
 
 // ---------- main ----------
+function parseArgs(argv) {
+  const map = { _flags: new Set() };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (!a.startsWith('--')) continue;
+    const key = a.slice(2);
+    const next = argv[i + 1];
+    if (!next || next.startsWith('--')) {
+      map._flags.add(key); // boolean flag
+    } else {
+      map[key] = next;
+      i++;
+    }
+  }
+  return map;
+}
+
 function main() {
-  const args = process.argv.slice(2);
-  const argMap = {};
-  for (let i = 0; i < args.length; i += 2) argMap[args[i].replace(/^--/, '')] = args[i + 1];
+  const argMap = parseArgs(process.argv.slice(2));
 
   ensureDir(OUT_DIR);
   ensureGitignore();
@@ -164,6 +179,24 @@ function main() {
     sources = detected.sources;
   }
 
+  // --session <substring>: 複数セッション対応のため、ファイルパスにマッチするものだけ採用
+  if (argMap.session) {
+    const before = sources.length;
+    sources = sources.filter(s => s.includes(argMap.session));
+    if (!sources.length) {
+      console.error(`[harness-insight] No sessions match --session ${argMap.session} (had ${before}).`);
+      process.exit(4);
+    }
+  }
+
+  // --list: 検知したセッション一覧のみを表示して終了（抽出しない）
+  if (argMap._flags.has('list')) {
+    console.log(`[harness-insight] Detected harness: ${harness}`);
+    console.log(`[harness-insight] Sessions (${sources.length}):`);
+    for (const s of sources) console.log(`  - ${s}`);
+    return;
+  }
+
   const adapterPath = path.join(__dirname, 'adapters', `${harness}.js`);
   if (!fs.existsSync(adapterPath)) {
     console.error(`[harness-insight] Adapter not found: ${adapterPath}`);
@@ -171,7 +204,13 @@ function main() {
   }
   const adapter = require(adapterPath);
 
-  const out = fs.createWriteStream(OUT_FILE, { flags: 'w' });
+  // --out <path>: 任意の出力先（複数セッションを別々に保存したい場合に使う）
+  const outFile = argMap.out
+    ? path.resolve(ROOT, argMap.out)
+    : OUT_FILE;
+  const append = argMap._flags.has('append');
+  ensureDir(path.dirname(outFile));
+  const out = fs.createWriteStream(outFile, { flags: append ? 'a' : 'w' });
   let total = 0;
   for (const src of sources) {
     for (const evt of adapter.parse(src)) {
@@ -183,9 +222,9 @@ function main() {
 
   fs.writeFileSync(
     META_FILE,
-    JSON.stringify({ harness, sources, events: total, extracted_at: new Date().toISOString() }, null, 2)
+    JSON.stringify({ harness, sources, events: total, output: outFile, extracted_at: new Date().toISOString() }, null, 2)
   );
-  console.log(`[harness-insight] Extracted ${total} events from ${harness} → ${OUT_FILE}`);
+  console.log(`[harness-insight] Extracted ${total} events from ${harness} -> ${outFile}`);
 }
 
 if (require.main === module) main();

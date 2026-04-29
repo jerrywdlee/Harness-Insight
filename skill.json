@@ -5,7 +5,11 @@
   "version": "0.1.0",
   "summary": "Vibe coding セッションの自己評価＝＞自己改善ループ。多種ハーネス対応の汎用 SKILL。",
   "entry": "SKILL.md",
-  "triggers": ["/reflect", "/self-review"],
+  "triggers": ["/harness-insight", "/reflect", "/self-review"],
+  "subcommands": {
+    "/harness-insight extract": "Run Step 1+2 only (extraction). Use for projects with multiple sessions.",
+    "/harness-insight list":    "List detected sessions only (no extraction)."
+  },
   "files": [
     "SKILL.md",
     "scripts/extract.js",

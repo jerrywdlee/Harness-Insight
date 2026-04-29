@@ -8,10 +8,11 @@
     "harness-insight-install": "bin/install.js"
   },
   "scripts": {
-    "extract": "node scripts/extract.js",
-    "analyze": "node scripts/analyze.js",
-    "apply":   "node scripts/apply.js",
-    "reflect": "node scripts/extract.js && node scripts/analyze.js && node scripts/apply.js"
+    "extract":      "node scripts/extract.js",
+    "extract:list": "node scripts/extract.js --list",
+    "analyze":      "node scripts/analyze.js",
+    "apply":        "node scripts/apply.js",
+    "reflect":      "node scripts/extract.js && node scripts/analyze.js && node scripts/apply.js"
   },
   "files": [
     "SKILL.md",

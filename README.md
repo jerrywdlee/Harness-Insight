@@ -30,14 +30,29 @@ The installer will:
 
 ## Usage
 
-After installation, just type **`/reflect`** to your AI agent inside the target project.
-Or run the steps manually:
+After installation, type **`/harness-insight`** (preferred) or `/reflect` to your AI agent inside the target project.
+
+### Subcommands
+
+| Trigger | What it does |
+|---|---|
+| `/harness-insight` (preferred) / `/reflect` | Run the full Step 1–5 loop |
+| **`/extract-logs`** | **Extract only** (Step 1+2). Standalone trigger for projects with multiple sessions |
+| `/harness-insight extract` | Alias of `/extract-logs` (subcommand form) |
+| `/harness-insight list` | List detected sessions only (no extraction) |
+
+### Manual commands
 
 ```bash
 # Step 2: extract logs (auto-falls back to Python if Node is missing)
 node .skills/harness-insight/scripts/extract.js
 # or
 python .skills/harness-insight/scripts/extract.py
+
+# Multi-session helpers
+node .skills/harness-insight/scripts/extract.js --list
+node .skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/<name>.jsonl
+node .skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/all.jsonl --append
 
 # Step 3: analyze
 node .skills/harness-insight/scripts/analyze.js

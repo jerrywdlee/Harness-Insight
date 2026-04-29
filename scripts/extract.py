@@ -107,6 +107,10 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--harness")
     ap.add_argument("--source")
+    ap.add_argument("--session", help="filter detected sessions by substring (multi-session projects)")
+    ap.add_argument("--list", action="store_true", help="only list detected sessions and exit")
+    ap.add_argument("--out", help="custom output path (default: .harness_insights/normalized.jsonl)")
+    ap.add_argument("--append", action="store_true", help="append to --out instead of overwrite")
     args = ap.parse_args()
 
     OUT_DIR.mkdir(exist_ok=True)
@@ -120,10 +124,27 @@ def main() -> None:
             sys.exit("[harness-insight] No harness detected. Pass --harness <name> --source <path>.")
         harness, sources = det
 
+    if args.session:
+        before = len(sources)
+        sources = [s for s in sources if args.session in s]
+        if not sources:
+            sys.exit(f"[harness-insight] No sessions match --session {args.session} (had {before}).")
+
+    if args.list:
+        print(f"[harness-insight] Detected harness: {harness}")
+        print(f"[harness-insight] Sessions ({len(sources)}):")
+        for s in sources:
+            print(f"  - {s}")
+        return
+
     adapter = load_adapter(harness)
 
+    out_path = Path(args.out).resolve() if args.out else OUT_FILE
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    mode = "a" if args.append else "w"
+
     total = 0
-    with OUT_FILE.open("w", encoding="utf-8") as out:
+    with out_path.open(mode, encoding="utf-8") as out:
         for src in sources:
             for evt in adapter.parse(src):
                 out.write(json.dumps(evt, ensure_ascii=False) + "\n")
@@ -132,11 +153,12 @@ def main() -> None:
     META_FILE.write_text(
         json.dumps(
             {"harness": harness, "sources": sources, "events": total,
+             "output": str(out_path),
              "extracted_at": datetime.utcnow().isoformat() + "Z"},
             indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
-    print(f"[harness-insight] Extracted {total} events from {harness} -> {OUT_FILE}")
+    print(f"[harness-insight] Extracted {total} events from {harness} -> {out_path}")
 
 
 if __name__ == "__main__":

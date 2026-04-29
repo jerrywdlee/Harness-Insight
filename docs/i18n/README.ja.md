@@ -30,14 +30,28 @@ npx harness-insight --dest skills/harness-insight
 
 ## 使い方
 
-導入後、対象プロジェクト内で AI Agent に **`/reflect`** と打つだけ。
-あるいは手動で：
+導入後、対象プロジェクト内で AI Agent に **`/harness-insight`**（推奨）または `/reflect` と打つだけ。
+
+### サブコマンド
+
+| トリガー | 動作 |
+|---|---|
+| `/harness-insight`（推奨） / `/reflect` | Step 1〜5 を全実行 |
+| `/harness-insight extract` | **抽出のみ** (Step 1+2)。複数セッションを個別に取り込みたい PJ で使用 |
+| `/harness-insight list` | 検知されたセッション一覧のみ表示（抽出しない） |
+
+### 手動コマンド
 
 ```bash
 # Step 2: ログ抽出（Node が無ければ Python に自動フォールバック）
 node .skills/harness-insight/scripts/extract.js
 # あるいは
 python .skills/harness-insight/scripts/extract.py
+
+# 複数セッション補助
+node .skills/harness-insight/scripts/extract.js --list
+node .skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/<name>.jsonl
+node .skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/all.jsonl --append
 
 # Step 3: 解析
 node .skills/harness-insight/scripts/analyze.js
