@@ -1,8 +1,17 @@
 {
   "name": "harness-insight",
   "version": "0.1.0",
-  "description": "Universal AI Self-Reflection & Improvement SKILL for Vibe coding (Copilot/Cursor/OpenClaw/Hermes/Antigravity).",
+  "description": "Universal AI Self-Reflection & Improvement SKILL for Vibe coding (Copilot/Cursor/Claude Code/Codex/OpenClaw/Hermes/Antigravity).",
   "license": "MIT",
+  "author": "jerrywdlee",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerrywdlee/Harness-Insight.git"
+  },
+  "homepage": "https://github.com/jerrywdlee/Harness-Insight#readme",
+  "bugs": {
+    "url": "https://github.com/jerrywdlee/Harness-Insight/issues"
+  },
   "bin": {
     "harness-insight": "bin/install.js",
     "harness-insight-install": "bin/install.js"
@@ -17,6 +26,8 @@
   "files": [
     "SKILL.md",
     "skill.json",
+    "README.md",
+    "LICENSE",
     "bin/",
     "scripts/",
     "templates/"

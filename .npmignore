@@ -1,0 +1,33 @@
+# Harness-Insight npm ignore
+# package.json#files でホワイトリスト指定済みだが、念のため二重防御。
+
+# Dev / VCS
+.git/
+.github/
+.vscode/
+.idea/
+
+# Repo-only docs (not for npm consumers)
+AGENTS.md
+docs/
+設計書v*.md
+tmp/
+
+# SKILL runtime output (must never be published)
+.harness_insights/
+
+# Local artifacts
+*.tgz
+*.log
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test / coverage
+coverage/
+.nyc_output/
