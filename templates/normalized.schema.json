@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "harness-insight normalized event",
+  "type": "object",
+  "required": ["ts", "actor", "action_type", "content"],
+  "properties": {
+    "ts":          { "type": "string", "format": "date-time" },
+    "actor":       { "enum": ["user", "ai", "system"] },
+    "action_type": { "enum": ["prompt", "ai_response", "code_edit", "tool_call", "interrupt", "error", "system"] },
+    "content":     { "type": "string" },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "tokens_in":  { "type": "integer" },
+        "tokens_out": { "type": "integer" },
+        "files":      { "type": "array", "items": { "type": "string" } },
+        "tool":       { "type": "string" },
+        "duration_ms":{ "type": "integer" },
+        "source":     { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

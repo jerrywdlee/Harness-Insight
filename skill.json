@@ -1,0 +1,37 @@
+{
+  "$schema": "https://skills.dev/schema/skill.json",
+  "name": "Harness-Insight",
+  "id": "harness-insight",
+  "version": "0.1.0",
+  "summary": "Vibe coding セッションの自己評価＝＞自己改善ループ。多種ハーネス対応の汎用 SKILL。",
+  "entry": "SKILL.md",
+  "triggers": ["/reflect", "/self-review"],
+  "files": [
+    "SKILL.md",
+    "scripts/extract.js",
+    "scripts/extract.py",
+    "scripts/analyze.js",
+    "scripts/analyze.py",
+    "scripts/analyze.ps1",
+    "scripts/apply.js",
+    "scripts/adapters/copilot.js",
+    "scripts/adapters/copilot.py",
+    "scripts/adapters/cursor.js",
+    "scripts/adapters/cursor.py",
+    "scripts/adapters/openclaw.js",
+    "scripts/adapters/openclaw.py",
+    "scripts/adapters/hermes.js",
+    "scripts/adapters/hermes.py",
+    "scripts/adapters/antigravity.js",
+    "scripts/adapters/antigravity.py",
+    "templates/normalized.schema.json",
+    "templates/analysis_prompt.md",
+    "templates/fallback_prompt.md",
+    "templates/manual_extract_prompt.md",
+    "templates/proposed_rule.md"
+  ],
+  "install": {
+    "destination": ".skills/harness-insight",
+    "post_install_message": "Installed to .skills/harness-insight. Use `/reflect` in your AI agent or run `npm run reflect` from this skill folder."
+  }
+}

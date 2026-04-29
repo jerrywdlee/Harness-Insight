@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""Harness-Insight extractor (Python).
+
+役割:
+  1. 動作中のハーネス種別を検知
+  2. アダプタ (scripts.adapters.<harness>.parse) を呼び出し共通スキーマへ正規化
+  3. .harness_insights/normalized.jsonl へ書き出し
+  4. .gitignore に /.harness_insights/ を自動追記
+
+使い方:
+  python scripts/extract.py [--harness <name>] [--source <path>]
+"""
+from __future__ import annotations
+import argparse, glob, importlib, importlib.util, json, os, sys
+from pathlib import Path
+from datetime import datetime
+
+ROOT = Path.cwd()
+OUT_DIR = ROOT / ".harness_insights"
+OUT_FILE = OUT_DIR / "normalized.jsonl"
+META_FILE = OUT_DIR / "meta.json"
+ADAPTER_DIR = Path(__file__).parent / "adapters"
+
+
+def ensure_gitignore() -> None:
+    gi = ROOT / ".gitignore"
+    line = "/.harness_insights/"
+    body = gi.read_text(encoding="utf-8") if gi.exists() else ""
+    if not any(l.strip() == line for l in body.splitlines()):
+        sep = "" if (body == "" or body.endswith("\n")) else "\n"
+        gi.write_text(body + sep + line + "\n", encoding="utf-8")
+
+
+def detect_harness() -> tuple[str, list[str]] | None:
+    candidates: list[tuple[str, list[str]]] = []
+
+    # GitHub Copilot Chat
+    appdata = os.environ.get("APPDATA", "")
+    if appdata:
+        base = Path(appdata) / "Code" / "User" / "workspaceStorage"
+        if base.exists():
+            files = [str(p) for p in base.glob("*/GitHub.copilot-chat/debug-logs/*")]
+            if files:
+                candidates.append(("copilot", files))
+
+    # Cursor
+    cursor_dir = Path.home() / ".cursor" / "sessions"
+    if cursor_dir.exists():
+        files = sorted(str(p) for p in cursor_dir.glob("*.jsonl"))
+        if files:
+            candidates.append(("cursor", files))
+
+    # OpenClaw
+    oc = ROOT / ".openclaw" / "sessions"
+    if oc.exists():
+        files = sorted(str(p) for p in oc.glob("*.jsonl"))
+        if files:
+            candidates.append(("openclaw", files))
+
+    # HermesAgent
+    hm = ROOT / ".hermes" / "runs"
+    if hm.exists():
+        files = sorted(str(p) for p in hm.glob("*/overview.txt"))
+        if files:
+            candidates.append(("hermes", files))
+
+    # Antigravity
+    ag = ROOT / ".antigravity" / "transcripts"
+    if ag.exists():
+        files = sorted(str(p) for p in ag.glob("*.jsonl"))
+        if files:
+            candidates.append(("antigravity", files))
+
+    return candidates[0] if candidates else None
+
+
+def load_adapter(name: str):
+    path = ADAPTER_DIR / f"{name}.py"
+    if not path.exists():
+        sys.exit(f"[harness-insight] Adapter not found: {path}")
+    spec = importlib.util.spec_from_file_location(f"hi_adapter_{name}", path)
+    mod = importlib.util.module_from_spec(spec)
+    assert spec.loader
+    spec.loader.exec_module(mod)
+    if not hasattr(mod, "parse"):
+        sys.exit(f"[harness-insight] Adapter missing parse(): {path}")
+    return mod
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--harness")
+    ap.add_argument("--source")
+    args = ap.parse_args()
+
+    OUT_DIR.mkdir(exist_ok=True)
+    ensure_gitignore()
+
+    if args.harness and args.source:
+        harness, sources = args.harness, [args.source]
+    else:
+        det = detect_harness()
+        if not det:
+            sys.exit("[harness-insight] No harness detected. Pass --harness <name> --source <path>.")
+        harness, sources = det
+
+    adapter = load_adapter(harness)
+
+    total = 0
+    with OUT_FILE.open("w", encoding="utf-8") as out:
+        for src in sources:
+            for evt in adapter.parse(src):
+                out.write(json.dumps(evt, ensure_ascii=False) + "\n")
+                total += 1
+
+    META_FILE.write_text(
+        json.dumps(
+            {"harness": harness, "sources": sources, "events": total,
+             "extracted_at": datetime.utcnow().isoformat() + "Z"},
+            indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    print(f"[harness-insight] Extracted {total} events from {harness} -> {OUT_FILE}")
+
+
+if __name__ == "__main__":
+    main()
