@@ -163,10 +163,26 @@ JS / Python の extractor は `/.harness_insights/` 行が無ければ自動追�
 ## Step 4: REPORT — 二元化レポート
 
 ### 4.1 Human-facing
+
+**必ず以下のフォーマット**で出力する。特に「採点内訳」セクションは **省略禁止**。`metrics.json` の各値をそのまま転記し、減点理由・寄与度も明示する。
+
 ```markdown
 ## 🪞 Self-Reflection Report
 
 **総合 AI 委任度スコア:** 68 / 100  （前回 63 / +5）
+
+### 📊 採点内訳（必須）
+
+| 指標 | 実測値 | 重み | 寄与/減点 | コメント |
+|---|---|---|---|---|
+| delegation_score      | 72 / 100 | 30% | +21.6 | AI 委任比率は良好 |
+| prompt_clarity        | 64 / 100 | 20% | +12.8 | 制約語不足が散見 |
+| manual_coding_time_min| 18 min   | 20% | -3 (機会損失×3) | `src/foo.ts` で 18 分の手動編集 |
+| interrupt_count       | 3        | 15% | -12 (×4) | 出力形式不一致が原因 |
+| rework_ratio          | 35%      | 15% | -2.5 (max(0,35-30)×0.5) | 同一ファイル再編集 |
+| **total_score**       | **68**   | —   | 100 − 3 − 12 − 2.5 ≈ 68 | |
+
+> 計算式: `total = 100 − opportunity_loss×3 − interrupt_count×4 − max(0, rework_ratio−30)×0.5`
 
 ### あなたへのコーチング
 - `src/foo.ts` の手動修正に 18 分かけていました。次回は AI に委任を検討してください。

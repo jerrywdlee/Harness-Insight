@@ -84,7 +84,10 @@ $repeated = ($counts.Values | Where-Object { $_ -gt 1 } | Measure-Object -Sum).S
 $rework = if ($total) { [Math]::Round(($repeated / $total) * 1000) / 10 } else { 0 }
 
 $delegation = if (($ai + $usr) -gt 0) { [Math]::Round(($ai / ($ai + $usr)) * 1000) / 10 } else { 0 }
-$totalScore = [Math]::Max(0, [Math]::Round(100 - ($oppLoss * 3) - ($interrupts * 4) - ([Math]::Max(0, $rework - 30) * 0.5)))
+$oppPenalty = -($oppLoss * 3)
+$intrPenalty = -($interrupts * 4)
+$reworkPenalty = -([Math]::Max(0, $rework - 30) * 0.5)
+$totalScore = [Math]::Max(0, [Math]::Round(100 + $oppPenalty + $intrPenalty + $reworkPenalty))
 
 $metrics = [ordered]@{
   generated_at           = (Get-Date).ToUniversalTime().ToString('o')
@@ -96,6 +99,14 @@ $metrics = [ordered]@{
   interrupt_count        = $interrupts
   rework_ratio           = $rework
   total_score            = $totalScore
+  breakdown              = [ordered]@{
+    delegation_contrib   = [Math]::Round($delegation * 0.30, 1)
+    clarity_contrib      = [Math]::Round($clarity * 0.20, 1)
+    opportunity_penalty  = $oppPenalty
+    interrupt_penalty    = $intrPenalty
+    rework_penalty       = [Math]::Round($reworkPenalty, 1)
+    formula              = '100 - opportunity_loss_count×3 - interrupt_count×4 - max(0, rework_ratio-30)×0.5'
+  }
 }
 
 $json = $metrics | ConvertTo-Json -Depth 6

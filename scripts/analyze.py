@@ -100,7 +100,10 @@ def main():
     clarity = compute_clarity(prompts)
     rework = compute_rework(edits)
     delegation = round((ai / (ai + usr)) * 1000) / 10 if (ai + usr) else 0
-    total = max(0, round(100 - opp_loss * 3 - interrupts * 4 - (max(0, rework - 30) * 0.5)))
+    opp_penalty = -(opp_loss * 3)
+    intr_penalty = -(interrupts * 4)
+    rework_penalty = -(max(0, rework - 30) * 0.5)
+    total = max(0, round(100 + opp_penalty + intr_penalty + rework_penalty))
 
     metrics = {
         "generated_at": datetime.utcnow().isoformat() + "Z",
@@ -112,6 +115,14 @@ def main():
         "interrupt_count": interrupts,
         "rework_ratio": rework,
         "total_score": total,
+        "breakdown": {
+            "delegation_contrib": round(delegation * 0.30, 1),
+            "clarity_contrib": round(clarity * 0.20, 1),
+            "opportunity_penalty": opp_penalty,
+            "interrupt_penalty": intr_penalty,
+            "rework_penalty": round(rework_penalty, 1),
+            "formula": "100 - opportunity_loss_count×3 - interrupt_count×4 - max(0, rework_ratio-30)×0.5",
+        },
     }
     OUT_DIR.mkdir(exist_ok=True)
     OUT_FILE.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")

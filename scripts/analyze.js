@@ -97,12 +97,10 @@ function main() {
   const delegation = pct(aiActions, aiActions + userActions);
   const rework = computeReworkRatio(edits);
 
-  const total = Math.max(0, Math.round(
-    100
-    - manual.opportunity_loss_count * 3
-    - interrupts * 4
-    - (rework > 30 ? (rework - 30) * 0.5 : 0)
-  ));
+  const oppPenalty = -(manual.opportunity_loss_count * 3);
+  const intrPenalty = -(interrupts * 4);
+  const reworkPenalty = -(rework > 30 ? (rework - 30) * 0.5 : 0);
+  const total = Math.max(0, Math.round(100 + oppPenalty + intrPenalty + reworkPenalty));
 
   const metrics = {
     generated_at: new Date().toISOString(),
@@ -114,6 +112,14 @@ function main() {
     interrupt_count: interrupts,
     rework_ratio: rework,
     total_score: total,
+    breakdown: {
+      delegation_contrib: Math.round(delegation * 0.30 * 10) / 10,
+      clarity_contrib: Math.round(clarity * 0.20 * 10) / 10,
+      opportunity_penalty: oppPenalty,
+      interrupt_penalty: intrPenalty,
+      rework_penalty: Math.round(reworkPenalty * 10) / 10,
+      formula: '100 - opportunity_loss_count×3 - interrupt_count×4 - max(0, rework_ratio-30)×0.5',
+    },
   };
 
   fs.writeFileSync(OUT_FILE, JSON.stringify(metrics, null, 2));
