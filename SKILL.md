@@ -2,7 +2,7 @@
 name: harness-insight
 description: |
   Vibe coding セッションの自己評価＝＞自己改善ループを実行する汎用 SKILL。
-  GitHub Copilot / Cursor / OpenClaw / HermesAgent / Antigravity など各種 AI ハーネスのセッションログを
+  GitHub Copilot / Cursor / Claude Code / OpenAI Codex CLI / OpenClaw / HermesAgent / Antigravity など各種 AI ハーネスのセッションログを
   共通スキーマに正規化し、別コンテキスト（context: fork）でメタ分析を行い、
   ユーザー向けコーチングと AGENTS.md 系ファイルへのルール追記（プロジェクト/グローバル選択可）を行う。
   USE FOR: /reflect, セッション振り返り, AI 委任度スコア算出, プロンプト改善, AGENTS.md 自動更新,
@@ -43,9 +43,11 @@ install:
 |---|---|---|
 | 1 | GitHub Copilot Chat | `%APPDATA%/Code/User/workspaceStorage/*/GitHub.copilot-chat/debug-logs/*` |
 | 2 | Cursor | `%APPDATA%/Cursor/logs/**/*`, `~/.cursor/sessions/*.jsonl` |
-| 3 | OpenClaw | `./.openclaw/sessions/*.jsonl` |
-| 4 | HermesAgent | `./.hermes/runs/*/overview.txt` |
-| 5 | Antigravity | `./.antigravity/transcripts/*.jsonl` |
+| 3 | Claude Code | `~/.claude/projects/<encoded-cwd>/*.jsonl` |
+| 4 | OpenAI Codex CLI | `~/.codex/sessions/*.jsonl`, `~/.codex/history/*.jsonl` |
+| 5 | OpenClaw | `./.openclaw/sessions/*.jsonl` |
+| 6 | HermesAgent | `./.hermes/runs/*/overview.txt` |
+| 7 | Antigravity | `./.antigravity/transcripts/*.jsonl` |
 | 99 | Unknown | ユーザーに保存先を問い合わせ |
 
 判定後、`.harness_insights/meta.json` に `{ "harness": "...", "source_path": "..." }` を記録。
@@ -209,6 +211,8 @@ Harness-Insight/                   ← この repo 自身が SKILL package
 │   └── adapters/
 │       ├── copilot.{js,py}
 │       ├── cursor.{js,py}
+│       ├── claude.{js,py}
+│       ├── codex.{js,py}
 │       ├── openclaw.{js,py}
 │       ├── hermes.{js,py}
 │       └── antigravity.{js,py}

@@ -16,9 +16,11 @@
 |---|---|---|
 | 1 | GitHub Copilot Chat | `%APPDATA%/Code/User/workspaceStorage/*/GitHub.copilot-chat/debug-logs/*` |
 | 2 | Cursor | `%APPDATA%/Cursor/logs/**/*`, `~/.cursor/sessions/*.jsonl` |
-| 3 | OpenClaw | `./.openclaw/sessions/*.jsonl` |
-| 4 | HermesAgent | `./.hermes/runs/*/overview.txt` |
-| 5 | Antigravity | `./.antigravity/transcripts/*.jsonl` |
+| 3 | Claude Code | `~/.claude/projects/<encoded-cwd>/*.jsonl` |
+| 4 | OpenAI Codex CLI | `~/.codex/sessions/*.jsonl`, `~/.codex/history/*.jsonl` |
+| 5 | OpenClaw | `./.openclaw/sessions/*.jsonl` |
+| 6 | HermesAgent | `./.hermes/runs/*/overview.txt` |
+| 7 | Antigravity | `./.antigravity/transcripts/*.jsonl` |
 | 99 | Unknown | ユーザーに添付 or パス入力を依頼 |
 
 ## 制約

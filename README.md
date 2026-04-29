@@ -3,7 +3,7 @@
 > Vibe coding セッションの **自己評価 ＝＞ 自己改善** ループを後付けする汎用 SKILL。
 > このリポジトリ自身が SKILL パッケージです。
 
-対応ハーネス: GitHub Copilot Chat / Cursor / OpenClaw / HermesAgent / Antigravity
+対応ハーネス: GitHub Copilot Chat / Cursor / **Claude Code** / **OpenAI Codex CLI** / OpenClaw / HermesAgent / Antigravity
 
 ## インストール
 

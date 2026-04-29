@@ -50,6 +50,22 @@ def detect_harness() -> tuple[str, list[str]] | None:
         if files:
             candidates.append(("cursor", files))
 
+    # Claude Code: ~/.claude/projects/<encoded-cwd>/<uuid>.jsonl
+    claude_base = Path.home() / ".claude" / "projects"
+    if claude_base.exists():
+        files = sorted(str(p) for p in claude_base.glob("*/*.jsonl"))
+        if files:
+            candidates.append(("claude", files))
+
+    # Codex CLI: ~/.codex/sessions/*.jsonl or ~/.codex/history/*.jsonl
+    codex_files: list[str] = []
+    for sub in ("sessions", "history"):
+        d = Path.home() / ".codex" / sub
+        if d.exists():
+            codex_files += sorted(str(p) for p in list(d.glob("*.jsonl")) + list(d.glob("*.json")))
+    if codex_files:
+        candidates.append(("codex", codex_files))
+
     # OpenClaw
     oc = ROOT / ".openclaw" / "sessions"
     if oc.exists():

@@ -63,6 +63,41 @@ function detectHarness() {
       },
     },
     {
+      name: 'claude',
+      probe: () => {
+        // Claude Code: ~/.claude/projects/<encoded-cwd>/<uuid>.jsonl
+        const base = path.join(os.homedir(), '.claude', 'projects');
+        if (!fs.existsSync(base)) return null;
+        const out = [];
+        for (const proj of fs.readdirSync(base)) {
+          const dir = path.join(base, proj);
+          if (!fs.statSync(dir).isDirectory()) continue;
+          for (const f of fs.readdirSync(dir)) {
+            if (f.endsWith('.jsonl')) out.push(path.join(dir, f));
+          }
+        }
+        return out.length ? out : null;
+      },
+    },
+    {
+      name: 'codex',
+      probe: () => {
+        // Codex CLI: ~/.codex/sessions/*.jsonl もしくは ~/.codex/history/*.jsonl
+        const candidates = [
+          path.join(os.homedir(), '.codex', 'sessions'),
+          path.join(os.homedir(), '.codex', 'history'),
+        ];
+        const out = [];
+        for (const dir of candidates) {
+          if (!fs.existsSync(dir)) continue;
+          for (const f of fs.readdirSync(dir)) {
+            if (f.endsWith('.jsonl') || f.endsWith('.json')) out.push(path.join(dir, f));
+          }
+        }
+        return out.length ? out : null;
+      },
+    },
+    {
       name: 'openclaw',
       probe: () => {
         const dir = path.join(ROOT, '.openclaw', 'sessions');
