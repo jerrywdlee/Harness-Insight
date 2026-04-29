@@ -44,11 +44,16 @@ function detectHarness() {
         const base = path.join(process.env.APPDATA || '', 'Code', 'User', 'workspaceStorage');
         if (!fs.existsSync(base)) return null;
         const sessions = [];
+        const walk = (d) => {
+          for (const entry of fs.readdirSync(d, { withFileTypes: true })) {
+            const full = path.join(d, entry.name);
+            if (entry.isDirectory()) walk(full);
+            else if (/\.(jsonl|log|json)$/i.test(entry.name)) sessions.push(full);
+          }
+        };
         for (const ws of fs.readdirSync(base)) {
           const dir = path.join(base, ws, 'GitHub.copilot-chat', 'debug-logs');
-          if (fs.existsSync(dir)) {
-            for (const f of fs.readdirSync(dir)) sessions.push(path.join(dir, f));
-          }
+          if (fs.existsSync(dir)) walk(dir);
         }
         return sessions.length ? sessions : null;
       },
