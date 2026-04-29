@@ -1,92 +1,94 @@
+Languages: English | [日本語](./docs/i18n/README.ja.md)
+
 # Harness-Insight
 
-> Vibe coding セッションの **自己評価 ＝＞ 自己改善** ループを後付けする汎用 SKILL。
-> このリポジトリ自身が SKILL パッケージです。
+> A universal SKILL that retrofits a **Self-Reflection ⇒ Self-Improvement** loop onto any vibe-coding session.
+> This repository itself **is** the SKILL package.
 
-対応ハーネス: GitHub Copilot Chat / Cursor / **Claude Code** / **OpenAI Codex CLI** / OpenClaw / HermesAgent / Antigravity
+Supported harnesses: GitHub Copilot Chat / Cursor / **Claude Code** / **OpenAI Codex CLI** / OpenClaw / HermesAgent / Antigravity
 
-## インストール
+## Install
 
-### 推奨：skills CLI 経由
+### Recommended: via the skills CLI
 ```bash
 npx skills add Harness-Insight
 ```
 
-### または直接インストーラ実行
+### Or run the installer directly
 ```bash
-# 現在のプロジェクトに導入
+# install into the current project
 npx harness-insight
 
-# 任意ディレクトリに導入
+# install into a specific directory
 npx harness-insight --dest skills/harness-insight
 ```
 
-インストーラは以下を行います:
-1. SKILL ファイル一式を `<project>/.skills/harness-insight/` にコピー
-2. `.gitignore` に `/.harness_insights/` を自動追記
-3. `AGENTS.md` に SKILL 存在マーカーを追記（既にあればスキップ）
+The installer will:
+1. Copy the SKILL files into `<project>/.skills/harness-insight/`
+2. Append `/.harness_insights/` to `.gitignore` automatically
+3. Insert a marker block into `AGENTS.md` (skipped if already present)
 
-## 使い方
+## Usage
 
-導入後、対象プロジェクト内で AI Agent に **`/reflect`** と打つだけ。
-あるいは手動で：
+After installation, just type **`/reflect`** to your AI agent inside the target project.
+Or run the steps manually:
 
 ```bash
-# Step 2: ログ抽出（Node が無ければ Python に自動フォールバック）
+# Step 2: extract logs (auto-falls back to Python if Node is missing)
 node .skills/harness-insight/scripts/extract.js
-# あるいは
+# or
 python .skills/harness-insight/scripts/extract.py
 
-# Step 3: 解析
+# Step 3: analyze
 node .skills/harness-insight/scripts/analyze.js
-# あるいは
+# or
 python .skills/harness-insight/scripts/analyze.py
-# あるいは
+# or
 pwsh .skills/harness-insight/scripts/analyze.ps1
 
-# Step 5: 反映スコープを 3 値選択 (none / project / global, 既定 project)
+# Step 5: pick an apply scope (none / project / global, default = project)
 node .skills/harness-insight/scripts/apply.js
 ```
 
-**JS / Python のいずれも利用不可** な場合は、AI Agent 自身が
-[`templates/manual_extract_prompt.md`](templates/manual_extract_prompt.md) に従い
-セッションログを直接取得して共通スキーマへ正規化します。
+When **neither Node nor Python** is available, the AI agent itself follows
+[`templates/manual_extract_prompt.md`](templates/manual_extract_prompt.md) to fetch the session log
+and normalize it into the common schema.
 
-## 反映スコープ（Step 5）
+## Apply scopes (Step 5)
 
-| 値 | スコープ | 反映先 |
+| Value | Scope | Target file (priority) |
 |---|---|---|
-| `1` / `none` | 反映しない | （`proposed_rules.md` のみ残す） |
-| `2` / `project` ★既定 | プロジェクト | `./AGENTS.md` → `./.github/copilot-instructions.md` → `./.cursor/rules/harness-insight.md` |
-| `3` / `global` | グローバル | `~/.agents/AGENTS.md` → `%APPDATA%/Code/User/prompts/harness-insight.instructions.md` → `~/.cursor/rules/harness-insight.md` |
+| `1` / `none` | Do not apply | (only keeps `proposed_rules.md`) |
+| `2` / `project` ★default | Per-project | `./AGENTS.md` → `./.github/copilot-instructions.md` → `./.cursor/rules/harness-insight.md` |
+| `3` / `global` | Per-user (global) | `~/.agents/AGENTS.md` → `%APPDATA%/Code/User/prompts/harness-insight.instructions.md` → `~/.cursor/rules/harness-insight.md` |
 
-## ファイル構成
+## Repository layout
 
-| パス | 役割 |
+| Path | Role |
 |---|---|
-| [SKILL.md](SKILL.md) | SKILL 仕様（AI が参照） |
-| [skill.json](skill.json) | skills CLI 用マニフェスト |
-| [package.json](package.json) | npm パッケージ定義（`bin: harness-insight`） |
-| [bin/install.js](bin/install.js) | インストーラ |
-| [scripts/extract.js](scripts/extract.js) / [extract.py](scripts/extract.py) | ログ抽出（多言語） |
-| [scripts/adapters/](scripts/adapters/) | ハーネス別アダプタ（JS / PY） |
-| [scripts/analyze.js](scripts/analyze.js) / [analyze.py](scripts/analyze.py) / [analyze.ps1](scripts/analyze.ps1) | 定量解析（多言語） |
-| [scripts/apply.js](scripts/apply.js) | Step5 反映（none/project/global） |
-| [templates/](templates/) | LLM プロンプト・スキーマ・ルールテンプレ |
-| [docs/設計書v1.md](docs/%E8%A8%AD%E8%A8%88%E6%9B%B8v1.md) / [docs/設計書v2.md](docs/%E8%A8%AD%E8%A8%88%E6%9B%B8v2.md) | 設計ドキュメント |
+| [SKILL.md](SKILL.md) | SKILL specification (read by the AI) |
+| [skill.json](skill.json) | Manifest for the skills CLI |
+| [package.json](package.json) | npm package definition (`bin: harness-insight`) |
+| [bin/install.js](bin/install.js) | Installer |
+| [scripts/extract.js](scripts/extract.js) / [extract.py](scripts/extract.py) | Log extraction (multi-language) |
+| [scripts/adapters/](scripts/adapters/) | Per-harness adapters (JS / PY) |
+| [scripts/analyze.js](scripts/analyze.js) / [analyze.py](scripts/analyze.py) / [analyze.ps1](scripts/analyze.ps1) | Quantitative analysis (multi-language) |
+| [scripts/apply.js](scripts/apply.js) | Step 5 apply (none/project/global) |
+| [templates/](templates/) | LLM prompts, schemas, rule templates |
+| [docs/設計書v1.md](docs/%E8%A8%AD%E8%A8%88%E6%9B%B8v1.md) / [docs/設計書v2.md](docs/%E8%A8%AD%E8%A8%88%E6%9B%B8v2.md) | Design documents (Japanese) |
 
-## 出力物（`.harness_insights/` 以下）
+## Outputs (under `.harness_insights/`)
 
-- `meta.json` — 検知したハーネス情報
-- `normalized.jsonl` — 共通スキーマに変換したセッションログ
-- `metrics.json` — 定量スコア
-- `history.jsonl` — 履歴（トレンド表示用）
-- `proposed_rules.md` — AGENTS.md 追記候補
+- `meta.json` — detected harness info
+- `normalized.jsonl` — session log normalized to the common schema
+- `metrics.json` — quantitative scores
+- `history.jsonl` — history (used for trend reporting)
+- `proposed_rules.md` — candidate rules for AGENTS.md
 
-## 安全性
-- 解析は **別コンテキスト (`context: fork`)** で行い、メインセッションのトークンを汚染しない。
-- 生ログは **読み取り専用**。
-- ルール反映 (Step 5) は **必ずユーザー承認** を経由（無入力 = project）。
+## Safety
+- Analysis runs in a **forked context (`context: fork`)** so it never pollutes the main session's tokens.
+- Raw logs are **read-only**.
+- Step 5 (apply) **always requires explicit user approval** (empty input = `project`).
 
-## ライセンス
+## License
 MIT
