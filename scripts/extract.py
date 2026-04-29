@@ -25,7 +25,12 @@ ADAPTER_DIR = Path(__file__).parent / "adapters"
 def ensure_gitignore() -> None:
     gi = ROOT / ".gitignore"
     line = "/.harness_insights/"
-    body = gi.read_text(encoding="utf-8") if gi.exists() else ""
+    body = ""
+    if gi.exists():
+        try:
+            body = gi.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            body = gi.read_text(encoding="utf-8", errors="ignore")
     if not any(l.strip() == line for l in body.splitlines()):
         sep = "" if (body == "" or body.endswith("\n")) else "\n"
         gi.write_text(body + sep + line + "\n", encoding="utf-8")
@@ -39,9 +44,28 @@ def detect_harness() -> tuple[str, list[str]] | None:
     if appdata:
         base = Path(appdata) / "Code" / "User" / "workspaceStorage"
         if base.exists():
-            files = [str(p) for p in base.glob("*/GitHub.copilot-chat/debug-logs/*")]
-            if files:
-                candidates.append(("copilot", files))
+            transcripts: list[str] = []
+            debug_logs: list[str] = []
+            for ws in base.iterdir():
+                root = ws / "GitHub.copilot-chat"
+                if not root.exists():
+                    continue
+                t_dir = root / "transcripts"
+                if t_dir.exists():
+                    transcripts += [str(p) for p in t_dir.rglob("*.jsonl")]
+                cs_dir = root / "chatSessions"
+                if cs_dir.exists():
+                    transcripts += [str(p) for p in cs_dir.rglob("*.jsonl")]
+                    transcripts += [str(p) for p in cs_dir.rglob("*.json")]
+                d_dir = root / "debug-logs"
+                if d_dir.exists():
+                    for ext in ("*.jsonl", "*.log", "*.json"):
+                        debug_logs += [str(p) for p in d_dir.rglob(ext)]
+            # transcripts を優先
+            if transcripts:
+                candidates.append(("copilot", sorted(set(transcripts))))
+            elif debug_logs:
+                candidates.append(("copilot", sorted(set(debug_logs))))
 
     # Cursor
     cursor_dir = Path.home() / ".cursor" / "sessions"

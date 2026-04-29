@@ -52,7 +52,7 @@ install:
 
 | 優先 | Harness | 検知パス（例） |
 |---|---|---|
-| 1 | GitHub Copilot Chat | `%APPDATA%/Code/User/workspaceStorage/*/GitHub.copilot-chat/debug-logs/*` |
+| 1 | GitHub Copilot Chat | `%APPDATA%/Code/User/workspaceStorage/*/GitHub.copilot-chat/transcripts/*.jsonl`（優先：実対話履歴）<br>`%APPDATA%/.../GitHub.copilot-chat/debug-logs/*`（フォールバック：telemetry） |
 | 2 | Cursor | `%APPDATA%/Cursor/logs/**/*`, `~/.cursor/sessions/*.jsonl` |
 | 3 | Claude Code | `~/.claude/projects/<encoded-cwd>/*.jsonl` |
 | 4 | OpenAI Codex CLI | `~/.codex/sessions/*.jsonl`, `~/.codex/history/*.jsonl` |

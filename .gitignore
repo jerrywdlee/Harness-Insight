@@ -148,3 +148,6 @@ temp/*
 # harness-insight ˆê¬‰Ê•¨
 /.harness_insights/
 
+
+__pycache__/
+*.pyc
