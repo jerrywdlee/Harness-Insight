@@ -89,7 +89,7 @@ and normalize it into the common schema.
 | [scripts/analyze.js](scripts/analyze.js) / [analyze.py](scripts/analyze.py) / [analyze.ps1](scripts/analyze.ps1) | Quantitative analysis (multi-language) |
 | [scripts/apply.js](scripts/apply.js) | Step 5 apply (none/project/global) |
 | [templates/](templates/) | LLM prompts, schemas, rule templates |
-| [docs/設計書v1.md](docs/%E8%A8%AD%E8%A8%88%E6%9B%B8v1.md) / [docs/設計書v2.md](docs/%E8%A8%AD%E8%A8%88%E6%9B%B8v2.md) | Design documents (Japanese) |
+| [docs/詳細設計.md](docs/%E8%A9%B3%E7%B4%B0%E8%A8%AD%E8%A8%88.md) | Detailed design document (Japanese) |
 
 ## Outputs (under `.harness_insights/`)
 

@@ -273,8 +273,7 @@ Harness-Insight/                   ← この repo 自身が SKILL package
 │   ├── manual_extract_prompt.md   ← JS/PY 両方不可時の Agent 指示書
 │   └── proposed_rule.md
 └── docs/
-    ├── 設計書v1.md
-    └── 設計書v2.md
+    └── 詳細設計.md
 ```
 
 ## 7. AI 実行手順（Copilot 向けプロンプト要約）
