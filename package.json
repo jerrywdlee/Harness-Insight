@@ -1,6 +1,6 @@
 {
   "name": "harness-insight",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Universal AI Self-Reflection & Improvement SKILL for Vibe coding (Copilot/Cursor/Claude Code/Codex/OpenClaw/Hermes/Antigravity).",
   "license": "MIT",
   "author": "jerrywdlee",
@@ -17,11 +17,11 @@
     "harness-insight-install": "bin/install.js"
   },
   "scripts": {
-    "extract":      "node scripts/extract.js",
+    "extract": "node scripts/extract.js",
     "extract:list": "node scripts/extract.js --list",
-    "analyze":      "node scripts/analyze.js",
-    "apply":        "node scripts/apply.js",
-    "reflect":      "node scripts/extract.js && node scripts/analyze.js && node scripts/apply.js"
+    "analyze": "node scripts/analyze.js",
+    "apply": "node scripts/apply.js",
+    "reflect": "node scripts/extract.js && node scripts/analyze.js && node scripts/apply.js"
   },
   "files": [
     "SKILL.md",
@@ -32,6 +32,16 @@
     "scripts/",
     "templates/"
   ],
-  "keywords": ["skill", "ai", "copilot", "cursor", "self-reflection", "agents.md", "vibe-coding"],
-  "engines": { "node": ">=16" }
+  "keywords": [
+    "skill",
+    "ai",
+    "copilot",
+    "cursor",
+    "self-reflection",
+    "agents.md",
+    "vibe-coding"
+  ],
+  "engines": {
+    "node": ">=16"
+  }
 }
