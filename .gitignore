@@ -145,9 +145,14 @@ vite.config.ts.timestamp-*
 tmp/*
 temp/*
 
-# harness-insight ˆê¬‰Ê•¨
+# harness-insight ï¿½êï¿½ï¿½ï¿½Ê•ï¿½
 /.harness_insights/
 
 
 __pycache__/
 *.pyc
+.senate/
+.agents/
+senate.toml
+skills-lock.json
+
