@@ -24,7 +24,7 @@ npx harness-insight --dest skills/harness-insight
 ```
 
 インストーラは以下を行います:
-1. SKILL ファイル一式を `<project>/.skills/harness-insight/` にコピー
+1. SKILL ファイル一式を `<project>/.agents/skills/harness-insight/` にコピー
 2. `.gitignore` に `/.harness_insights/` を自動追記
 3. `AGENTS.md` に SKILL 存在マーカーを追記（既にあればスキップ）
 
@@ -44,24 +44,24 @@ npx harness-insight --dest skills/harness-insight
 
 ```bash
 # Step 2: ログ抽出（Node が無ければ Python に自動フォールバック）
-node .skills/harness-insight/scripts/extract.js
+node .agents/skills/harness-insight/scripts/extract.js
 # あるいは
-python .skills/harness-insight/scripts/extract.py
+python .agents/skills/harness-insight/scripts/extract.py
 
 # 複数セッション補助
-node .skills/harness-insight/scripts/extract.js --list
-node .skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/<name>.jsonl
-node .skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/all.jsonl --append
+node .agents/skills/harness-insight/scripts/extract.js --list
+node .agents/skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/<name>.jsonl
+node .agents/skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/all.jsonl --append
 
 # Step 3: 解析
-node .skills/harness-insight/scripts/analyze.js
+node .agents/skills/harness-insight/scripts/analyze.js
 # あるいは
-python .skills/harness-insight/scripts/analyze.py
+python .agents/skills/harness-insight/scripts/analyze.py
 # あるいは
-pwsh .skills/harness-insight/scripts/analyze.ps1
+pwsh .agents/skills/harness-insight/scripts/analyze.ps1
 
 # Step 5: 反映スコープを 3 値選択 (none / project / global, 既定 project)
-node .skills/harness-insight/scripts/apply.js
+node .agents/skills/harness-insight/scripts/apply.js
 ```
 
 **JS / Python のいずれも利用不可** な場合は、AI Agent 自身が

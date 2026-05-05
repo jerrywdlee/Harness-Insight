@@ -415,7 +415,7 @@ v0.2 で `/extract-logs` を独立トリガーとして追加しかけたが、*
 - `files[]` ホワイトリスト + `.npmignore` の **二重防御** で、`設計書*.md` / `docs/` / `.harness_insights/` / `tmp/` 等を配布物から除外。
 
 ### 12.2 インストーラ動作
-1. `<project>/.skills/harness-insight/` に SKILL ファイル一式をコピー。
+1. `<project>/.agents/skills/harness-insight/` に SKILL ファイル一式をコピー。
 2. `.gitignore` に `/.harness_insights/` を自動追記。
 3. `AGENTS.md` に SKILL 存在マーカーを追記（既存ならスキップ）。
 

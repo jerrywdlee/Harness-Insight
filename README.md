@@ -24,7 +24,7 @@ npx harness-insight --dest skills/harness-insight
 ```
 
 The installer will:
-1. Copy the SKILL files into `<project>/.skills/harness-insight/`
+1. Copy the SKILL files into `<project>/.agents/skills/harness-insight/`
 2. Append `/.harness_insights/` to `.gitignore` automatically
 3. Insert a marker block into `AGENTS.md` (skipped if already present)
 
@@ -44,24 +44,24 @@ After installation, type **`/harness-insight`** (preferred) or `/reflect` to you
 
 ```bash
 # Step 2: extract logs (auto-falls back to Python if Node is missing)
-node .skills/harness-insight/scripts/extract.js
+node .agents/skills/harness-insight/scripts/extract.js
 # or
-python .skills/harness-insight/scripts/extract.py
+python .agents/skills/harness-insight/scripts/extract.py
 
 # Multi-session helpers
-node .skills/harness-insight/scripts/extract.js --list
-node .skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/<name>.jsonl
-node .skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/all.jsonl --append
+node .agents/skills/harness-insight/scripts/extract.js --list
+node .agents/skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/<name>.jsonl
+node .agents/skills/harness-insight/scripts/extract.js --session <substring> --out .harness_insights/all.jsonl --append
 
 # Step 3: analyze
-node .skills/harness-insight/scripts/analyze.js
+node .agents/skills/harness-insight/scripts/analyze.js
 # or
-python .skills/harness-insight/scripts/analyze.py
+python .agents/skills/harness-insight/scripts/analyze.py
 # or
-pwsh .skills/harness-insight/scripts/analyze.ps1
+pwsh .agents/skills/harness-insight/scripts/analyze.ps1
 
 # Step 5: pick an apply scope (none / project / global, default = project)
-node .skills/harness-insight/scripts/apply.js
+node .agents/skills/harness-insight/scripts/apply.js
 ```
 
 When **neither Node nor Python** is available, the AI agent itself follows

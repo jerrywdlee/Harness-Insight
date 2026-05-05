@@ -39,7 +39,7 @@
     "templates/proposed_rule.md"
   ],
   "install": {
-    "destination": ".skills/harness-insight",
-    "post_install_message": "Installed to .skills/harness-insight. Use `/reflect` in your AI agent or run `npm run reflect` from this skill folder."
+    "destination": ".agents/skills/harness-insight",
+    "post_install_message": "Installed to .agents/skills/harness-insight. Use `/reflect` in your AI agent or run `npm run reflect` from this skill folder."
   }
 }

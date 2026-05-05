@@ -3,7 +3,7 @@
  * `npx skills add jerrywdlee/Harness-Insight` 互換のインストーラ。
  *
  * 動作:
- *  - skill.json の files[] を、対象プロジェクトの <destination>（既定 .skills/harness-insight/）にコピーする。
+ *  - skill.json の files[] を、対象プロジェクトの <destination>（既定 .agents/skills/harness-insight/）にコピーする。
  *  - .gitignore に /.harness_insights/ を追記する。
  *  - 対象プロジェクトの AGENTS.md（無ければ作成）に SKILL の存在を追記する。
  *
@@ -22,7 +22,7 @@ for (let i = 0; i < args.length; i += 2) argMap[args[i].replace(/^--/, '')] = ar
 
 const TARGET_PROJECT = path.resolve(argMap.project || process.cwd());
 const manifest = JSON.parse(fs.readFileSync(path.join(PKG_ROOT, 'skill.json'), 'utf8'));
-const DEST = path.join(TARGET_PROJECT, argMap.dest || (manifest.install && manifest.install.destination) || '.skills/harness-insight');
+const DEST = path.join(TARGET_PROJECT, argMap.dest || (manifest.install && manifest.install.destination) || '.agents/skills/harness-insight');
 
 function copyFile(rel) {
   const src = path.join(PKG_ROOT, rel);

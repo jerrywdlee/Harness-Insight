@@ -52,7 +52,7 @@ This repository is both:
 2. Use local extractors from this repository:
    - [scripts/extract.js](scripts/extract.js)
    - [scripts/extract.py](scripts/extract.py)
-   Do not use `.skills/harness-insight/...` for this repository's self-run.
+   Do not use `.agents/skills/harness-insight/...` for this repository's self-run.
 3. For `project` scope, target order is:
    - `./AGENTS.md`
    - `./.github/copilot-instructions.md`
