@@ -1,18 +1,22 @@
-# Manual Extraction Prompt（Node も Python も使えない環境向け）
+# Manual Extraction Prompt (for environments without Node or Python)
 
-> 解析環境に Node.js も Python もインストールされていません。
-> あなた（実行中の AI Agent）が **自力で** 直接ログを取得し、共通スキーマに正規化してください。
+Node.js and Python are not available in the analysis environment.
+You (the running AI agent) must directly collect logs and normalize them to the common schema.
 
-## 手順
-1. 下記の検知優先順序で、**実行ホスト OS の標準 API（VS Code API / OS ファイルシステム / ユーザー添付ファイル等）** からセッションログを取得する。
-2. 共通スキーマ（[`templates/normalized.schema.json`](../templates/normalized.schema.json)）に従って 1 イベント = 1 行で出力する。
-3. 出力先は対象プロジェクトの `.harness_insights/normalized.jsonl`（無ければ作成）。
-4. 同時に `.gitignore` に `/.harness_insights/` を追記する（重複時はスキップ）。
-5. 完了後、解析フェーズへ進む際は [`templates/fallback_prompt.md`](fallback_prompt.md) を読み込み、定量指標を **力技で推計** する。
+## Language Policy
+- If you need to ask follow-up questions, respond in the same language as the user's latest question unless the user explicitly requests another language.
+- Do not translate machine-readable identifiers, paths, or schema keys.
 
-## 検知優先順序
+## Procedure
+1. Using the detection priority below, fetch session logs from host capabilities (VS Code API, OS filesystem, user attachments, etc.).
+2. Normalize output as one event per line according to [`templates/normalized.schema.json`](../templates/normalized.schema.json).
+3. Write to `.harness_insights/normalized.jsonl` under the target project (create if missing).
+4. Append `/.harness_insights/` to `.gitignore` (skip if already present).
+5. After extraction, read [`templates/fallback_prompt.md`](fallback_prompt.md) and estimate quantitative metrics.
 
-| 優先 | Harness | パス例 |
+## Detection Priority
+
+| Priority | Harness | Example Path |
 |---|---|---|
 | 1 | GitHub Copilot Chat | `%APPDATA%/Code/User/workspaceStorage/*/GitHub.copilot-chat/debug-logs/*` |
 | 2 | Cursor | `%APPDATA%/Cursor/logs/**/*`, `~/.cursor/sessions/*.jsonl` |
@@ -21,9 +25,9 @@
 | 5 | OpenClaw | `./.openclaw/sessions/*.jsonl` |
 | 6 | HermesAgent | `./.hermes/runs/*/overview.txt` |
 | 7 | Antigravity | `./.antigravity/transcripts/*.jsonl` |
-| 99 | Unknown | ユーザーに添付 or パス入力を依頼 |
+| 99 | Unknown | Ask the user to attach the log or provide a path |
 
-## 制約
-- 生ログは **絶対に書き換えない**（読み取り専用）。
-- API トークン・個人情報・ファイルパスのユーザー名部分は `***` でマスクする。
-- 取得できなかった場合は、ユーザーに「該当ログファイルを添付してください」と 1 メッセージで依頼する（無断で推測しない）。
+## Constraints
+- Never modify raw logs (read-only only).
+- Mask API tokens, personal data, and username segments in file paths as `***`.
+- If logs cannot be retrieved, send one clear request to the user to attach the relevant log file (do not fabricate data).

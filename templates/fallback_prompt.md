@@ -1,9 +1,9 @@
-# LLM Fallback Prompt（パーサー実行不可時）
+# LLM Fallback Prompt (when parsers are unavailable)
 
-> Node / Python / PowerShell いずれも利用不可、もしくはパーサーがクラッシュしました。
-> あなたは正規化ログ JSONL を直接読み、`metrics.json` を **力技で推計** して下さい。
+Node, Python, and PowerShell are unavailable, or parser execution has crashed.
+Read the normalized JSONL directly and estimate `metrics.json`.
 
-## 必須出力 JSON
+## Required Output JSON
 ```json
 {
   "delegation_score": <0-100>,
@@ -22,19 +22,19 @@
     "formula": "100 - opp×3 - intr×4 - max(0,rework-30)×0.5"
   },
   "evidence": [
-    "<根拠となるログ抜粋を最大5件>"
+    "<up to 5 evidence log excerpts>"
   ]
 }
 ```
 
-## ルール
-1. `actor=user` & `action_type=code_edit` が `ai_response` 直後に **5 分以上連続** している箇所を `opportunity_loss_count` とする（タイムスタンプの差分から推計）。
-2. 同一 `meta.files[*]` に対する `code_edit` が複数あるなら `rework_ratio` に反映。
-3. JSON 以外の説明文を **絶対に出力しない**。
-4. 推計に不確実性がある項目は `evidence[]` に根拠ログ ID もしくは行番号を必ず添える。
-5. **`total_score` は必ず以下の計算式で算出**し、各構成要素を `breakdown` に明示する：
-   `total_score = 100 − opportunity_loss_count×3 − interrupt_count×4 − max(0, rework_ratio−30)×0.5`
-6. 出力 JSON に **`breakdown` キーを必ず含める**：
+  ## Rules
+  1. If `actor=user` and `action_type=code_edit` continues for 5 minutes or more immediately after `ai_response`, count it as `opportunity_loss_count`.
+  2. If the same `meta.files[*]` appears in multiple `code_edit` events, reflect it in `rework_ratio`.
+  3. Output JSON only. Do not output any prose outside JSON.
+  4. If an estimate is uncertain, include evidence log IDs or line references in `evidence[]`.
+  5. `total_score` must use this formula, and each component must be shown in `breakdown`:
+    `total_score = 100 - opportunity_loss_count*3 - interrupt_count*4 - max(0, rework_ratio-30)*0.5`
+  6. The output JSON must include a `breakdown` key:
    ```json
    "breakdown": {
      "delegation_contrib":   <delegation_score × 0.30>,
@@ -46,20 +46,20 @@
    }
    ```
 
-## Few-shot 例
-入力（一部）:
+## Few-shot Example
+Input (partial):
 ```
 {"ts":"...T10:00:00Z","actor":"ai","action_type":"ai_response","content":"..."}
 {"ts":"...T10:01:00Z","actor":"user","action_type":"code_edit","content":"..."}
 {"ts":"...T10:09:00Z","actor":"user","action_type":"code_edit","content":"..."}
-{"ts":"...T10:10:00Z","actor":"user","action_type":"prompt","content":"違う、もう一度"}
+{"ts":"...T10:10:00Z","actor":"user","action_type":"prompt","content":"This is not correct, try again"}
 ```
-出力:
+Output:
 ```json
 {
   "manual_coding_time_min": 9,
   "opportunity_loss_count": 1,
   "interrupt_count": 0,
-  "evidence": ["10:01-10:09 連続編集 (8min) 直後にやり直し依頼"]
+  "evidence": ["10:01-10:09 continuous edits (8min), followed by rework request"]
 }
 ```

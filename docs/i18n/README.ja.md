@@ -89,7 +89,7 @@ node .skills/harness-insight/scripts/apply.js
 | [scripts/analyze.js](../../scripts/analyze.js) / [analyze.py](../../scripts/analyze.py) / [analyze.ps1](../../scripts/analyze.ps1) | 定量解析（多言語） |
 | [scripts/apply.js](../../scripts/apply.js) | Step5 反映（none/project/global） |
 | [templates/](../../templates/) | LLM プロンプト・スキーマ・ルールテンプレ |
-| [docs/詳細設計.md](../%E8%A9%B3%E7%B4%B0%E8%A8%AD%E8%A8%88.md) | 詳細設計ドキュメント |
+| [docs/detailed-design.md](../detailed-design.md) | 詳細設計ドキュメント |
 
 ## 出力物（`.harness_insights/` 以下）
 

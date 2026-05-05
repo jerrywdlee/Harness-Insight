@@ -507,7 +507,7 @@ v0.2 で `/extract-logs` を独立トリガーとして追加しかけたが、*
 - [README.md](README.md) / [docs/i18n/README.ja.md](docs/i18n/README.ja.md) — 人間向け概説
 - [AGENTS.md](AGENTS.md) — ドッグフード規約 + 反映済み Proposed Rules
 - [templates/](templates/) — LLM プロンプト・スキーマ・ルール雛形
-- [docs/詳細設計.md](docs/%E8%A9%B3%E7%B4%B0%E8%A8%AD%E8%A8%88.md) — 本設計書のリポジトリ内リンク
+- [docs/detailed-design.md](docs/detailed-design.md) - repository-local link to this design document
 
 ---
 
